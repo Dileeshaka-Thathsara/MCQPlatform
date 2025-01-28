@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Platform</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1b1b32;
+            color: #eaeaea;
+            overflow-x: hidden;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            color: #00ffcc;
+            padding: 20px;
+            text-shadow: 0 0 20px #584dee, 0 0 30px #2218df;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h1::before {
+            content: '';
+            width: 90px;
+            height: 70px;
+            background: url('SR 71.jpeg') no-repeat center/contain;
+            display: inline-block;
+            margin-right: 10px;
+            animation: glow 1.5s infinite alternate;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px #2b11d7; }
+            100% { box-shadow: 0 0 20px #b060f5; }
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: linear-gradient(145deg, #232341, #1b1b32);
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        .mcq {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .mcq:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        .mcq h3 {
+            color: #00ffcc;
+            font-size: 1.5em;
+        }
+        .stem {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .deselect-btn {
+            margin-left: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+        .deselect-btn:hover {
+            background-color: #e53935;
+        }
+        .results {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .feedback-message {
+            font-size: 1.2em;
+            color: #ff5722;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .button-container button {
+            padding: 12px 25px;
+            background: linear-gradient(145deg, #00ffcc, #00bbaa);
+            color: #1b1b32;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .button-container button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 204, 0.5);
+        }
+        .mcq input[type="radio"] {
+            margin-right: 10px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #ff5722;
+        }
+        select {
+            padding: 8px 12px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            background-color: #1b1b32;
+            color: #eaeaea;
+        }
+        .feedback .incorrect {
+            color: #ff4d4d;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff4d4d;
+            animation: incorrectBounce 1s ease-in-out infinite;
+        }
+        @keyframes incorrectBounce {
+            0%, 100% {
+                transform: scale(1);
+                color: #ff4d4d;
+            }
+            50% {
+                transform: scale(1.1);
+                color: #ff6666;
+            }
+        }
+        .feedback .unattempted {
+            background: linear-gradient(145deg, #ffcc00, #ffaa00);
+            padding: 5px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            color: #1b1b32;
+            animation: pulse 1s infinite alternate;
+        }
+        .feedback .correct {
+            color: #5cb85c;
+            font-weight: bold;
+            text-shadow: 0 0 5px #5cb85c;
+        }
+        .textbox {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #00ffcc;
+            background: linear-gradient(145deg, #232341, #1b1b32);
+            color: #eaeaea;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+            transition: all 0.3s ease;
+        }
+        .textbox:focus {
+            outline: none;
+            border-color: #00ffaa;
+            box-shadow: 0 5px 25px rgba(0, 255, 170, 0.4);
+        }
+        button, input[type="file"] {
+            cursor: pointer;
+        }
+        input[type="file"] {
+            font-size: 1em;
+            padding: 8px;
+            background: #00bbaa;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            transition: 0.3s;
+        }
+        input[type="file"]:hover {
+            background: #00ffaa;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <h1>MCQ Platform SR -71 </h1>
+    <div class="container">
+        <div>
+            <label for="topicName">MCQ Topic Name:</label>
+            <input type="text" id="topicName" placeholder="Enter topic name" class="textbox" required>
+        </div>
+        <div>
+            <label for="mcqCount">Number of MCQs (1-30):</label>
+            <input type="number" id="mcqCount" min="1" max="30" value="5" class="textbox">
+            <button onclick="generateMCQs()">Generate MCQs</button>
+        </div>
+
+        <div>
+            <label for="csvFile">Upload Correct Answers CSV:</label>
+            <input type="file" id="csvFile" onchange="handleCSVUpload(event)" class="textbox">
+        </div>
+
+        <div id="mcqs" class="mcq-container"></div>
+
+        <div class="evaluate-options">
+            <label for="evaluateOption">Select Evaluation Option:</label>
+            <select id="evaluateOption">
+                <option value="evaluate">Evaluate Answers</option>
+                <option value="feedback">View Feedback Only</option>
+            </select>
+            <div class="button-container">
+                <button onclick="evaluateAnswers()">Submit</button>
+            </div>
+        </div>
+
+        <div class="results" id="results"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="button-container">
+            <button onclick="downloadFeedback()">Download Feedback as Text File</button>
+        </div>
+    </div>
+    <script>
+        let correctAnswers = [];
+
+        function generateMCQs() {
+            const mcqCount = parseInt(document.getElementById('mcqCount').value);
+            const mcqsDiv = document.getElementById('mcqs');
+            mcqsDiv.innerHTML = '';
+
+            for (let i = 1; i <= mcqCount; i++) {
+                const mcqDiv = document.createElement('div');
+                mcqDiv.classList.add('mcq');
+                mcqDiv.innerHTML = `<h3>MCQ ${i}</h3>`;
+
+                for (let j = 1; j <= 5; j++) {
+                    const stemDiv = document.createElement('div');
+                    stemDiv.classList.add('stem');
+                    stemDiv.innerHTML = `
+                        Stem ${j}: 
+                        <label><input type="radio" name="mcq${i}stem${j}" value="T"> T</label>
+                        <label><input type="radio" name="mcq${i}stem${j}" value="F"> F</label>
+                        <button class="deselect-btn" onclick="deselectAnswer('mcq${i}stem${j}')">Deselect</button>
+                    `;
+                    mcqDiv.appendChild(stemDiv);
+                }
+
+                mcqsDiv.appendChild(mcqDiv);
+            }
+        }
+
+        function deselectAnswer(stemName) {
+            const radios = document.getElementsByName(stemName);
+            radios.forEach(radio => {
+                radio.checked = false;
+            });
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+
+                // Split content by lines (handling Windows and Unix line endings)
+                const lines = content.split(/\r?\n/);
+
+                // Clean up the lines by trimming whitespace and removing empty lines
+                const cleanedLines = lines.map(line => line.trim()).filter(line => line.length > 0);
+
+                // Parse the correct answers
+                correctAnswers = cleanedLines.map(line => {
+                    // Split each line by commas, and clean up any extra spaces
+                    return line.split(',').map(value => value.trim().replace(/\r/g, '').replace(/\s+/g, ' '));
+                });
+
+                // Log the parsed result for debugging
+                console.log("Parsed Correct Answers:", correctAnswers);
+            };
+
+            reader.readAsText(file);
+        }
+
+        function evaluateAnswers() {
+            const mcqCount = parseInt(document.getElementById('mcqCount').value);
+            const topicName = document.getElementById('topicName').value.trim();
+            if (!topicName) {
+                alert("Please enter a topic name.");
+                return;
+            }
+
+            if (correctAnswers.length !== mcqCount) {
+                alert(`The number of correct answers in the CSV (${correctAnswers.length}) does not match the number of MCQs (${mcqCount}).`);
+                return;
+            }
+
+            let totalScore = 0;
+            let feedback = '';
+            const totalMaxScore = mcqCount * 5;
+            for (let i = 1; i <= mcqCount; i++) {
+                let mcqFeedback = `<h3>Feedback for MCQ ${i}:</h3>`;
+                let mcqScore = 0;
+
+                for (let j = 1; j <= 5; j++) {
+                    const correctValue = correctAnswers[i - 1][j - 1].toUpperCase();
+                    const radios = document.getElementsByName(`mcq${i}stem${j}`);
+                    let selectedValue = null;
+
+                    radios.forEach(radio => {
+                        if (radio.checked) {
+                            selectedValue = radio.value.toUpperCase();
+                        }
+                    });
+
+                    if (!selectedValue) {
+                        mcqFeedback += `<p class="unattempted">Stem ${j}: Unattempted</p>`;
+                    } else if (selectedValue === correctValue) {
+                        mcqFeedback += `<p class="correct">Stem ${j}: Correct</p>`;
+                        mcqScore++;
+                    } else {
+                        mcqFeedback += `<p class="incorrect">Stem ${j}: Incorrect (Correct Answer: ${correctValue})</p>`;
+                        mcqScore--;
+                    }
+                }
+
+                totalScore += mcqScore;
+                feedback += `<div>${mcqFeedback}</div>`;
+            }
+
+            const resultDiv = document.getElementById('results');
+            const feedbackDiv = document.getElementById('feedback');
+
+            const percentage = ((totalScore / totalMaxScore) * 100).toFixed(2);
+            resultDiv.innerHTML = `Topic: <strong>${topicName}</strong> - Your Score: ${totalScore}/${totalMaxScore} (${percentage}%)`;
+            feedbackDiv.innerHTML = feedback;
+        }
+
+        function downloadFeedback() {
+            const feedbackText = document.getElementById('feedback').innerText;
+            const blob = new Blob([feedbackText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'feedback.txt';
+            link.click();
+        }
+    </script>
+</body>
+</html>
